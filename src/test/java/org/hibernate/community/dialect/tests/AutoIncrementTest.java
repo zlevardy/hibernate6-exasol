@@ -1,68 +1,23 @@
 package org.hibernate.community.dialect.tests;
 
 import java.util.List;
-import java.util.ListIterator;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import org.hibernate.community.dialect.tests.data.DataGenerator;
-import org.hibernate.community.dialect.tests.data.Event;
+import org.hibernate.community.dialect.tests.data.TestAutoIncrement;
 
-import junit.framework.TestCase;
 
-public class HibernateTest extends TestCase{
+public class AutoIncrementTest extends HibernateEntityManagerForTests {
 
-    private static EntityManagerFactory sessionFactory;
+    //private Session session;
+    private EntityManager manager;
 
-    private static EntityManagerFactory buildSessionFactory() {
-        try {
-            sessionFactory = Persistence.createEntityManagerFactory("org.hibernate.exasol.jpa");
-            return sessionFactory;
-        }
-        catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
-        }
+    public AutoIncrementTest() {
+        this.manager = super.getManager();
     }
 
-    public static EntityManagerFactory getSessionFactory() {
-        if(sessionFactory == null) sessionFactory = buildSessionFactory();
-        return sessionFactory;
+    public void testReadEntityId(){
+        List<Long> res1 = manager.createQuery("SELECT id FROM TestAutoIncrement WHERE name='name1'").getResultList();
+        TestAutoIncrement e1 = manager.find(TestAutoIncrement.class, res1.get(0));
+        assertTrue(e1.getPid() == 1L);
     }
-
-
-    @Override
-    /**
-     * create dataset in EXASOL via Hibernate
-     */
-    protected void setUp(){
-        List<Event> data = DataGenerator.getEvents();
-        EntityManager manager = getSessionFactory().createEntityManager();
-        manager.getTransaction().begin();
-        ListIterator<Event> it = data.listIterator();
-        while(it.hasNext()){
-            manager.persist(it.next());
-        }
-        manager.getTransaction().commit();
-        manager.close();
-    }
-
-    @Override
-    /**
-     * Do nothing, data is erased at next startup
-     */
-    protected void tearDown(){
-        EntityManager manager = getSessionFactory().createEntityManager();
-        manager.getTransaction().begin();
-        manager.createQuery("delete from Event").executeUpdate();
-        manager.createQuery("delete from EventDetails").executeUpdate();
-        manager.getTransaction().commit();
-        manager.close();
-    }
-
-    protected EntityManager getManager(){
-        return getSessionFactory().createEntityManager();
-    }
-
-
 
 }
