@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class HibernateEntityManagerForTests extends TestCase {
+abstract class HibernateEntityManagerForTests extends TestCase {
 
     private static EntityManagerFactory sessionFactory;
 

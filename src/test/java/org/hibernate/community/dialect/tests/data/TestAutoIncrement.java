@@ -12,7 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class TestAutoIncrement {
 
 
-    private Long pid;
+    private Long id;
     private String name;
     private int age;
 
@@ -23,16 +23,20 @@ public class TestAutoIncrement {
         this.age = age;
     }
 
+    public TestAutoIncrement() {
+
+    }
+
     @Id
     @GeneratedValue(generator="increment")
     @GenericGenerator(name="increment", strategy = "increment")
-    public Long getPid() {
-        return pid;
+    public Long getId() {
+        return id;
     }
 
 
-    public void setPid(Long pid) {
-        this.pid = pid;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Column(name="NAME")
