@@ -19,6 +19,7 @@ import org.hibernate.dialect.function.CurrentFunction;
 import org.hibernate.dialect.function.StandardSQLFunction;
 //import org.hibernate.dialect.function.VarArgsSQLFunction;
 import org.hibernate.dialect.identity.IdentityColumnSupport;
+import org.hibernate.community.dialect.identity.ExasolIdentityColumnSupport;    //Community support folder structure:
 import org.hibernate.dialect.sequence.NoSequenceSupport;
 import org.hibernate.dialect.sequence.SequenceSupport;
 import org.hibernate.exception.LockAcquisitionException;
@@ -45,8 +46,7 @@ import org.hibernate.type.spi.TypeConfiguration;
 
 import static org.hibernate.exception.spi.TemplatedViolatedConstraintNameExtractor.extractUsingTemplate;
 
-//Community support folder structure:
-import org.hibernate.community.dialect.identity.ExasolIdentityColumnSupport;
+
 
 /**
  * A Hibernate 6 Dialect for EXASOL
