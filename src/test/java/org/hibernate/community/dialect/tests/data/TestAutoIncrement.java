@@ -1,18 +1,20 @@
 package org.hibernate.community.dialect.tests.data;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(schema = "vip", name = "SPARK_TEST_AUTO_INCREMENT")
 public class TestAutoIncrement {
 
-
+    @Id
+    // this trigger select max () from table
+    //@GeneratedValue(generator="increment")
+    //@GenericGenerator(name="increment", strategy = "increment")
+    // testing to call identityColumn:
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private int age;
 
@@ -27,9 +29,6 @@ public class TestAutoIncrement {
 
     }
 
-    @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
     public Long getId() {
         return id;
     }
