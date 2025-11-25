@@ -16,6 +16,8 @@
             <property name="hibernate.default_schema" value="test" />
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.hbm2ddl.auto" value="create" />
+
+            <property name="hibernate.jdbc.use_get_generated_keys" value="false"/>  <!-- to suppress "not supported by jdbc", allow GeneratorType.IDENTITY -->
         </properties>
     </persistence-unit>
 </persistence>
