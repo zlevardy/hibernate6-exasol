@@ -60,7 +60,6 @@ public class ExasolIdentityColumnSupport extends IdentityColumnSupportImpl {
 	@Override
 	/** get last id */
 	public String getIdentitySelectString(String table, String column, int type) throws MappingException {
-		//System.out.println("exasol-identity-col-support-sel-str: table = "+table+", column="+column+", type="+type);
 
 		//generates out of index errors by missing dot (".") in table name: "myschema.atable"
 		//return "SELECT COLUMN_IDENTITY FROM EXA_ALL_COLUMNS WHERE COLUMN_NAME='"+column.toUpperCase() +
@@ -69,12 +68,10 @@ public class ExasolIdentityColumnSupport extends IdentityColumnSupportImpl {
 
 		//schema may not find by "." from table to avoid out of index crash.
 		String schema = ( table.indexOf(".")==-1 ) ? "" : table.substring(0, table.indexOf(".")).toUpperCase();
-        //System.out.println("exasol-identity-col-support-sel-str: schema="+schema);
 
 		String sql = "SELECT COLUMN_IDENTITY FROM EXA_ALL_COLUMNS WHERE COLUMN_NAME='"+column.toUpperCase() +
 				"' AND COLUMN_SCHEMA='"+schema+
 				"' AND COLUMN_TABLE='"+(table.substring(table.indexOf(".")+1)).toUpperCase()+"'";
-        //System.out.println("exasol-identity-col-support-sel-str: sql="+sql);
 
 		return sql;
 	}
