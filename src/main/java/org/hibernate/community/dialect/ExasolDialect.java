@@ -7,7 +7,7 @@ import java.sql.Types;
 
 import jakarta.persistence.GenerationType;
 import org.hibernate.JDBCException;
-import org.hibernate.LockOptions;
+//HB6: import org.hibernate.LockOptions;        // deprecated by HB7, use generic JPA3.2 version of LockModeType (jakarta) instead
 import org.hibernate.PessimisticLockException;
 import org.hibernate.boot.model.FunctionContributions;
 import org.hibernate.cfg.Environment;
@@ -2354,10 +2354,31 @@ Driver: EXASolution JDBC Driver (ver. 7.1.20) - JDBC version : 4.1
 
     /** note: ExaSol JDBC 7.1.x AUTO INCREMENT NOT SUPPORTED */
 
+    //HB6: (inherited fromexa's HB5)
+    /*
     @Override
     public String getNativeIdentifierGeneratorStrategy() {
+        //HB6: (inherited from exa's HB5)
         return "sequence";                  //keep in sync with above (HB5 version), but strange anyway
         //return "identity";
+    }
+     */
+
+    //Hb6/7 suggested mode via GenerationType whoever hibernat 7.1.8.Final (SpringBoot4) still using legacy String to return
+    /*@Override
+    public GenerationType getNativeIdentifierGeneratorStrategy() {
+        // If your DB has identity columns, return IDENTITY; else SEQUENCE.
+        return getIdentityColumnSupport().supportsIdentityColumns()
+                ? GenerationType.IDENTITY
+                : GenerationType.SEQUENCE;
+    }*/
+    //HB7.1.8.final legacy version to return String
+    @Override
+    public String getNativeIdentifierGeneratorStrategy() {
+        // If your DB has identity columns, return IDENTITY; else SEQUENCE.
+        return getIdentityColumnSupport().supportsIdentityColumns()
+                ? "identity"
+                : "sequence";
     }
 
     @Override
@@ -2509,14 +2530,20 @@ Driver: EXASolution JDBC Driver (ver. 7.1.20) - JDBC version : 4.1
     }
 
     public String getWriteLockString(int timeout) {
-        if ( timeout == LockOptions.NO_WAIT )
+        //HB6: if ( timeout == LockOptions.NO_WAIT )
+        //HB7: JPA 3.2 value may get via "hint", such as: Integer timeout = (Integer) hints.get("jakarta.persistence.lock.timeout");
+        //if (timeout != null && timeout == 0) {    // don't wait for the lock (NO_WAIT)}   (INTEGER OBJECT VERSION)
+        if (timeout == 0)     // don't wait for the lock (NO_WAIT)}
             return " for update nowait";
         else
             return " for update";
     }
 
     public String getReadLockString(int timeout) {
-        if ( timeout == LockOptions.NO_WAIT )
+        //HB6: if ( timeout == LockOptions.NO_WAIT )
+        //HB7: JPA 3.2 value may get via "hint", such as: Integer timeout = (Integer) hints.get("jakarta.persistence.lock.timeout");
+        //if (timeout != null && timeout == 0) {    // don't wait for the lock (NO_WAIT)}   (INTEGER OBJECT VERSION)
+        if (timeout == 0)     // don't wait for the lock (NO_WAIT)}
             return " for share nowait";
         else
             return " for share";
